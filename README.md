@@ -1,4 +1,4 @@
-# Issue H-1: Flashloan `TEL` tokens to stake and exit in the same block can fake a huge amount of stake with minimal material cost 
+# Issue M-1: Flashloan `TEL` tokens to stake and exit in the same block can fake a huge amount of stake with minimal material cost 
 
 Source: https://github.com/sherlock-audit/2022-11-telcoin-judging/issues/83 
 
@@ -39,50 +39,78 @@ Consider requiring the `exit` to be at least 1 block later than the blocknumber 
 
 https://github.com/telcoin/telcoin-staking/pull/9
 
+**dmitriia**
+
+Escalate for 30 USDC
+I apologize if missed some point, but how this can be used to drain funds from the protocol?
+
+stakedByAt  is used only at balanceOfAt():
+https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/StakingModule.sol#L98-L104
+
+Which is stand-alone view function:
+https://github.com/sherlock-audit/2022-11-telcoin/search?q=balanceOfAt
 
 
-# Issue M-1: `claimFromIndividualPlugin()` may endup claiming the reward from a different plugin with wrong `auxData` when the index as changed due to `removePlugin()` 
+Slashing example is clear, but it uses latest(), not stakedByAt():
+https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/StakingModule.sol#L403-L406
+https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/StakingModule.sol#L356-L360
 
-Source: https://github.com/sherlock-audit/2022-11-telcoin-judging/issues/86 
+For the latest() Checkpoints will return the latest entry, after the flash loan:
+https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/master/contracts/utils/CheckpointsUpgradeable.sol#L94-L100
 
-## Found by 
-WATCHPUG
+I.e. if an attacker front-run the slashing, his flashloan will be finished when slashing run and the latest, small, entry will be used in claiming.
 
-## Summary
+Am I missing something here?
 
-When `removePlugin()` happens between the user sends the `claimFromIndividualPlugin()` transaction and before it gets minted, it may lead to lesser rewards as the `auxData` prepared for another plugin will now be used.
+If not the severity should be Med as view function is impacted, which can backfire downstream, but that's an assumption typically meaning downgrading the severity.
 
-## Vulnerability Detail
+**sherlock-admin**
 
-When a user calls `claimFromIndividualPlugin()`, a `pluginIndex` is used to refer to a plugin.
+ > Escalate for 30 USDC
+> I apologize if missed some point, but how this can be used to drain funds from the protocol?
+> 
+> stakedByAt  is used only at balanceOfAt():
+> https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/StakingModule.sol#L98-L104
+> 
+> Which is stand-alone view function:
+> https://github.com/sherlock-audit/2022-11-telcoin/search?q=balanceOfAt
+> 
+> 
+> Slashing example is clear, but it uses latest(), not stakedByAt():
+> https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/StakingModule.sol#L403-L406
+> https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/StakingModule.sol#L356-L360
+> 
+> For the latest() Checkpoints will return the latest entry, after the flash loan:
+> https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/master/contracts/utils/CheckpointsUpgradeable.sol#L94-L100
+> 
+> I.e. if an attacker front-run the slashing, his flashloan will be finished when slashing run and the latest, small, entry will be used in claiming.
+> 
+> Am I missing something here?
+> 
+> If not the severity should be Med as view function is impacted, which can backfire downstream, but that's an assumption typically meaning downgrading the severity.
 
-However, if the `PLUGIN_EDITOR` removed a plugin before the transaction gets minted, the plugin referred by the `pluginIndex` can be changed to another plugin.
+You've created a valid escalation for 30 USDC!
 
-As a result, the `auxData` supposed to be supplied to the original plugin is now supplied to another plugin.
+To remove the escalation from consideration: Delete your comment.
+To change the amount you've staked on this escalation: Edit your comment **(do not create a new comment)**.
 
-## Impact
+You may delete or edit your escalation comment anytime before the 48-hour escalation window closes. After that, the escalation becomes final.
 
-The user may end up with lesser rewards as a wrong `auxData` is supplied to the wrong plugin.
+**hrishibhat**
 
-## Code Snippet
+Escalation accepted 
 
-https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/StakingModule.sol#L420-L429
+After consulting with the sponsors, judges took a deep dive on the issue and decided to make this a medium severity.
 
-https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/StakingModule.sol#L178-L185
+**sherlock-admin**
 
-## Tool used
+> Escalation accepted 
+> 
+> After consulting with the sponsors, judges took a deep dive on the issue and decided to make this a medium severity.
 
-Manual Review
+This issue's escalations have been accepted!
 
-## Recommendation
-
-Consider using `pluginAddress` instead.
-
-## Discussion
-
-**amshirif**
-
-https://github.com/telcoin/telcoin-staking/pull/8
+Contestants' payouts and scores will be updated according to the changes made on this issue.
 
 
 
@@ -91,7 +119,7 @@ https://github.com/telcoin/telcoin-staking/pull/8
 Source: https://github.com/sherlock-audit/2022-11-telcoin-judging/issues/82 
 
 ## Found by 
-0x4non, 0xAgro, yixxas, 0xheynacho, Bnke0x0, WATCHPUG, aphak5010, rotcivegaf, Mukund, hickuphh3, pashov, hyh, Deivitto, rvierdiiev, eierina
+WATCHPUG, yixxas, hyh, Bnke0x0, hickuphh3, 0x4non, pashov, rvierdiiev, Deivitto, eierina, rotcivegaf, aphak5010, 0xheynacho, Mukund, 0xAgro
 
 ## Summary
 
@@ -283,7 +311,7 @@ https://github.com/telcoin/telcoin-staking/pull/10
 Source: https://github.com/sherlock-audit/2022-11-telcoin-judging/issues/45 
 
 ## Found by 
-yixxas, hickuphh3, cccz
+cccz, yixxas, hickuphh3
 
 ## Summary
 I believe `slash()` is used to take funds away from a user when they misbehave. However, a malicious user can frontrun this operation or the `pause()` function and call `fullClaimAndExit()` to fully exit before the penalty can affect them. 
