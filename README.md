@@ -112,6 +112,10 @@ This issue's escalations have been accepted!
 
 Contestants' payouts and scores will be updated according to the changes made on this issue.
 
+**jack-the-pug**
+
+Fix confirmed
+
 
 
 # Issue M-2: Unsafe ERC20 methods 
@@ -119,7 +123,7 @@ Contestants' payouts and scores will be updated according to the changes made on
 Source: https://github.com/sherlock-audit/2022-11-telcoin-judging/issues/82 
 
 ## Found by 
-WATCHPUG, yixxas, hyh, Bnke0x0, hickuphh3, 0x4non, pashov, rvierdiiev, Deivitto, eierina, rotcivegaf, aphak5010, 0xheynacho, Mukund, 0xAgro
+WATCHPUG, aphak5010, 0xAgro, rotcivegaf, eierina, Deivitto, yixxas, rvierdiiev, hickuphh3, Mukund, hyh, 0xheynacho, pashov, 0x4non, Bnke0x0
 
 ## Summary
 
@@ -154,6 +158,10 @@ Consider using `SafeERC20` for `transferFrom`, `transfer` and `approve`.
 **amshirif**
 
 https://github.com/telcoin/telcoin-staking/pull/6
+
+**jack-the-pug**
+
+Fix confirmed
 
 
 
@@ -199,6 +207,10 @@ Consider adding support to rescue native tokens.
 **amshirif**
 
 https://github.com/telcoin/telcoin-staking/pull/10
+
+**jack-the-pug**
+
+Fix confirmed
 
 
 
@@ -304,6 +316,10 @@ https://github.com/sherlock-audit/2022-11-telcoin/blob/main/contracts/fee-buybac
 
 https://github.com/telcoin/telcoin-staking/pull/10
 
+**jack-the-pug**
+
+fine
+
 
 
 # Issue M-5: `slash()` can be frontrunned to avoid the penalty imposed on them 
@@ -311,7 +327,7 @@ https://github.com/telcoin/telcoin-staking/pull/10
 Source: https://github.com/sherlock-audit/2022-11-telcoin-judging/issues/45 
 
 ## Found by 
-cccz, yixxas, hickuphh3
+cccz, hickuphh3, yixxas
 
 ## Summary
 I believe `slash()` is used to take funds away from a user when they misbehave. However, a malicious user can frontrun this operation or the `pause()` function and call `fullClaimAndExit()` to fully exit before the penalty can affect them. 
@@ -339,6 +355,10 @@ I implore the sponsors to explore alternatives to this slashing mechanism as the
 **amshirif**
 
 https://github.com/telcoin/telcoin-staking/pull/21
+
+**jack-the-pug**
+
+Fix confirmed
 
 
 
@@ -374,6 +394,10 @@ Create another `slash()` method that skips claiming yields of the slashed accoun
 **amshirif**
 
 https://github.com/telcoin/telcoin-staking/pull/16
+
+**jack-the-pug**
+
+Fix confirmed
 
 
 
